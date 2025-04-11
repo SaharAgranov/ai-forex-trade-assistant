@@ -1,0 +1,27 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter and VS Code
+.ipynb_checkpoints/
+.vscode/
+*.ipynb
+
+# Python virtual environments
+env/
+venv/
+
+# Windows
+Thumbs.db
+.DS_Store
+
+# Builds
+build/
+dist/
+*.spec
+
+# PyInstaller output
+*.exe
+*.pkg
