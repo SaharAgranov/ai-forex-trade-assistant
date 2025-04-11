@@ -1,0 +1,30 @@
+!pip install requests
+# This script fetches the latest Forex data for a given currency pair using the Alpha Vantage API.
+
+import requests
+import config
+
+def get_forex_data(from_symbol="EUR", to_symbol="USD", interval="5min"):
+    url = "https://www.alphavantage.co/query"
+    params = {
+        "function": "FX_INTRADAY",
+        "from_symbol": from_symbol,
+        "to_symbol": to_symbol,
+        "interval": interval,
+        "apikey": config.ALPHA_VANTAGE_API_KEY
+    }
+    
+    response = requests.get(url, params=params)
+    data = response.json()
+
+    if "Time Series FX" in data:
+        return data["Time Series FX (" + interval + ")"]
+    else:
+        print("⚠️ Error from Alpha Vantage:", data)
+        return None
+
+
+
+data = get_forex_data("EUR", "USD", "5min")
+for timestamp, values in list(data.items())[:1]:
+    print("Latest:", timestamp, values)
