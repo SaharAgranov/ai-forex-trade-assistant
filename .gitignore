@@ -25,3 +25,6 @@ dist/
 # PyInstaller output
 *.exe
 *.pkg
+
+# Secrets and environment variables
+.env
