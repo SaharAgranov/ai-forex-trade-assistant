@@ -9,6 +9,3 @@ pandas
 xmltodict
 requests
 
-# Utilities
-os
-datetime
