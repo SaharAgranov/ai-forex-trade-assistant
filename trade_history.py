@@ -57,3 +57,69 @@ def simulate_trade_outcome(trade, df):
                 break
 
     return outcome, future_data[['timestamp', 'open', 'high', 'low', 'close']].to_dict(orient='records')
+
+
+# in trade_history.py
+
+import pandas as pd
+from datetime import datetime
+
+
+def get_dynamic_sl_tp(
+    action,
+    entry_price,
+    currency_pair,
+    timestamp=None,
+    lookback=20,
+    method="volatility"  # options: 'volatility', 'bollinger'
+):
+    """
+    Dynamically compute SL/TP using selected logic:
+    - 'volatility': uses recent high/low and avg candle range
+    - 'bollinger': uses Bollinger Bands to define SL/TP
+    """
+    base, quote = currency_pair.split('/')
+    df = fetch_forex_history(base, quote)
+    if df is None or len(df) < lookback:
+        return None, None
+
+    # Preprocess time
+    if isinstance(timestamp, str):
+        timestamp = pd.to_datetime(timestamp)
+    if timestamp:
+        df = df[df['timestamp'] < timestamp]
+
+    recent = df.tail(lookback)
+    if recent.empty:
+        return None, None
+
+    if method == "volatility":
+        recent_high = recent['high'].max()
+        recent_low = recent['low'].min()
+        avg_range = (recent['high'] - recent['low']).mean()
+
+        if action == 'buy':
+            sl = round(recent_low - avg_range * 0.2, 5)
+            tp = round(recent_high + avg_range * 0.5, 5)
+        else:  # sell
+            sl = round(recent_high + avg_range * 0.2, 5)
+            tp = round(recent_low - avg_range * 0.5, 5)
+
+    elif method == "bollinger":
+        close = recent['close']
+        sma = close.rolling(window=lookback).mean().iloc[-1]
+        std = close.rolling(window=lookback).std().iloc[-1]
+        upper_band = sma + 2 * std
+        lower_band = sma - 2 * std
+
+        if action == 'buy':
+            sl = round(lower_band - std * 0.5, 5)
+            tp = round(upper_band + std * 0.5, 5)
+        else:
+            sl = round(upper_band + std * 0.5, 5)
+            tp = round(lower_band - std * 0.5, 5)
+
+    else:
+        raise ValueError("Invalid method. Use 'volatility' or 'bollinger'.")
+
+    return sl, tp

@@ -176,6 +176,10 @@ def chatbot_response(user_input, user_id=1, user_data=None):
 
         # Try to fetch price if it's missing (market order fallback)
     if pending_trade and not pending_trade.get('price'):
+          # Ensure 'currency_pair' exists
+        if not pending_trade.get('currency_pair'):
+            return "⚠️ Missing currency pair. Please specify a valid currency pair (e.g., 'EUR/USD')."
+
         base, quote = pending_trade['currency_pair'].split('/')
         market_price = get_forex_rate(base, quote)
         print(f"[DEBUG] Fallback market price fetched: {market_price}")
@@ -212,7 +216,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
                 example[k] = str(pending_trade[k])
 
         message = f"📝 I still need: {', '.join(f'**{m}**' for m in missing)}.\n"
-        message += f"💡 Example: `{example['action']} {example['amount']} {example['currency_pair']} at {example['price']}`"
+        message += f"💡 Example: `{example['action']} {example['amount']} {example['currency_pair']} at {example['price']} (or leave empty for stock price)`"
         return message
 
 
@@ -237,7 +241,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
 # Test CLI loop
 if __name__ == "__main__":
     user_data = load_user_data()
-    print("💬 Hello user number 1, I'm ypur AI Trade Assistant. Type 'exit' to stop.")
+    print("💬 Hello user number 1, I'm your AI Trade Assistant. Type 'exit' to stop.")
     while True:
         user_input = input("You: ")
         reply = chatbot_response(user_input)

@@ -14,13 +14,17 @@ user_list = list_all_users()
 user_id = st.sidebar.selectbox("Select User ID", user_list)
 if st.sidebar.button("Load User"):
     st.session_state.user_id = int(user_id)
+    st.session_state.chat_log = []  # Reset chat log for new user
     st.success(f"Loaded user {user_id}")
 
 if st.sidebar.button("➕ Create New User"):
-    new_id = max(user_list) + 1 if user_list else 1
+    numeric_ids = [int(uid) for uid in user_list]
+    new_id = max(numeric_ids) + 1 if numeric_ids else 1
     save_user_data(new_id, {"trades": []})
     st.session_state.user_id = new_id
+    st.session_state.chat_log = []  # 👈 Clear chat log for new user
     st.success(f"Created and loaded user {new_id}")
+
 
 # Chat UI
 st.title("💬 AI Forex Trade Assistant")
@@ -28,14 +32,15 @@ st.title("💬 AI Forex Trade Assistant")
 if st.session_state.user_id is None:
     st.warning("Please select or create a user from the sidebar.")
 else:
-    user_input = st.text_input("Enter your message:")
-    if st.button("Send") and user_input:
+    user_input = st.chat_input("Enter your message:")
+    if user_input:
         st.session_state.chat_log.append(("You", user_input))
         reply = chatbot_response(user_input, st.session_state.user_id)
         st.session_state.chat_log.append(("AI", reply))
 
     # Display chat
     for speaker, message in st.session_state.chat_log:
+        icon = "🤖" if speaker == "AI" else "🧑"
         st.markdown(f"**{speaker}:** {message}")
 
     # Trade History
