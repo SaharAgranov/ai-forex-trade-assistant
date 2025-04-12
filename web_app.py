@@ -3,8 +3,12 @@ import streamlit as st
 from chatbot_logic import chatbot_response
 from users_data import list_all_users, load_user_data, save_user_data
 
-USER_DATA_FOLDER = "user_data"
-os.makedirs(USER_DATA_FOLDER, exist_ok=True)
+# USER_DATA_FOLDER = "user_data"
+# os.makedirs(USER_DATA_FOLDER, exist_ok=True)
+
+USER_FOLDER = "users"
+os.makedirs(USER_FOLDER, exist_ok=True)
+
 
 # Initialize session state
 if 'user_id' not in st.session_state:
@@ -35,16 +39,20 @@ if st.sidebar.button("➕ Create New User"):
 
 # Delete User Button
 if st.sidebar.button("🗑️ Delete User"):
-    file_path = os.path.join(USER_DATA_FOLDER, f"{user_id}.json")
-    if os.path.exists(file_path):
+    file_path = os.path.join(USER_FOLDER, f"user_{user_id}.json")
+
+    st.sidebar.write(f"🔍 Looking for: `{file_path}`")  # Debug info
+
+    if os.path.isfile(file_path):
         os.remove(file_path)
         st.success(f"User {user_id} deleted successfully.")
         if st.session_state.user_id == int(user_id):
             st.session_state.user_id = None
             st.session_state.chat_log = []
-        st.rerun()  # Refresh UI and user list
+        st.rerun()
     else:
-        st.sidebar.error("User file not found.")
+        st.sidebar.error("❌ User file not found.")
+
 
 # Main Chat UI
 st.title("💬 AI Forex Trade Assistant")
