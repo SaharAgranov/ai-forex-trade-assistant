@@ -55,3 +55,28 @@ else:
                 f"- **{trade['action'].upper()} {trade['amount']} {trade['currency_pair']}** @ {trade['price']} "
                 f"(SL: {trade['stop_loss']}, TP: {trade['take_profit']})"
             )
+
+
+import os
+import streamlit as st
+
+USER_DATA_FOLDER = "user_data"  # adjust this to your real folder
+
+st.subheader("🗑️ Delete a User")
+
+# List all users
+users = [f.replace(".json", "") for f in os.listdir(USER_DATA_FOLDER) if f.endswith(".json")]
+
+if users:
+    user_to_delete = st.selectbox("Select a user to delete:", users)
+
+    if st.button("Delete User"):
+        file_path = os.path.join(USER_DATA_FOLDER, f"{user_to_delete}.json")
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            st.success(f"✅ User '{user_to_delete}' deleted.")
+        else:
+            st.error("❌ File not found.")
+else:
+    st.info("No users found.")
+

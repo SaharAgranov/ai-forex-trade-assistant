@@ -1,8 +1,13 @@
 from openai import OpenAI
 import json
 import my_config
+import streamlit as st
+from openai import OpenAI
 
-client = OpenAI(api_key=my_config.OPENAI_API_KEY)
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+
+# client = OpenAI(api_key=my_config.OPENAI_API_KEY)
 
 trade_function_schema = {
     "name": "parse_trade",
