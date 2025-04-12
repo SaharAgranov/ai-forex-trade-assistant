@@ -6,6 +6,14 @@ from users_data import list_all_users, load_user_data, save_user_data
 # USER_DATA_FOLDER = "user_data"
 # os.makedirs(USER_DATA_FOLDER, exist_ok=True)
 
+if 'user_id' not in st.session_state:
+    st.session_state.user_id = None
+if 'chat_log' not in st.session_state:
+    st.session_state.chat_log = []
+if 'welcome_shown' not in st.session_state:
+    st.session_state.welcome_shown = False
+
+
 USER_FOLDER = "users"
 os.makedirs(USER_FOLDER, exist_ok=True)
 
@@ -70,7 +78,9 @@ else:
             "📌 Type your first message below to begin!"
         )
         st.session_state.chat_log.append(("AI", welcome_msg))
-        
+        st.session_state.welcome_shown = True  # Prevent repeat
+
+
     user_input = st.chat_input("Enter your message:")
     if user_input:
         st.session_state.chat_log.append(("You", user_input))
