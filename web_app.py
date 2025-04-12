@@ -60,6 +60,17 @@ st.title("💬 AI Forex Trade Assistant")
 if st.session_state.user_id is None:
     st.warning("Please select or create a user from the sidebar.")
 else:
+    # Show welcome message at the beginning of a new session
+    if not st.session_state.chat_log:
+        welcome_msg = (
+            "👋 Welcome to the AI Forex Trade Assistant!\n\n"
+            "- Type something like **buy 1000 EUR/USD** to open a trade.\n"
+            "- You can leave the price blank to buy/sell at the market rate.\n"
+            "- You’ll be asked to choose SL/TP methods or enter them manually.\n\n"
+            "📌 Type your first message below to begin!"
+        )
+        st.session_state.chat_log.append(("AI", welcome_msg))
+        
     user_input = st.chat_input("Enter your message:")
     if user_input:
         st.session_state.chat_log.append(("You", user_input))
