@@ -174,6 +174,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
                 elif not pending_trade.get('price') and 0.5 <= value <= 2.0:
                     pending_trade['price'] = value
 
+    market_price = None
         # Try to fetch price if it's missing (market order fallback)
     if pending_trade and not pending_trade.get('price'):
           # Ensure 'currency_pair' exists
