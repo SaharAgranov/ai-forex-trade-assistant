@@ -31,7 +31,7 @@ if st.sidebar.button("➕ Create New User"):
     st.session_state.user_id = new_id
     st.session_state.chat_log = []
     st.success(f"Created and loaded user {new_id}")
-    st.experimental_rerun()  # Refresh the user list
+    st.rerun()  # Refresh the user list
 
 # Delete User Button
 if st.sidebar.button("🗑️ Delete User"):
@@ -42,7 +42,7 @@ if st.sidebar.button("🗑️ Delete User"):
         if st.session_state.user_id == int(user_id):
             st.session_state.user_id = None
             st.session_state.chat_log = []
-        st.experimental_rerun()  # Refresh UI and user list
+        st.rerun()  # Refresh UI and user list
     else:
         st.sidebar.error("User file not found.")
 
