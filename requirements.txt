@@ -1,5 +1,15 @@
+# Core dependencies
 streamlit
 openai>=1.0.0
+langchain-openai
+langchain-core
+
+# Data handling
 pandas
-langchain
 xmltodict
+requests
+
+# Utilities
+re
+os
+datetime
