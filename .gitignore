@@ -29,3 +29,7 @@ dist/
 # Secrets and environment variables
 .env
 *.toml
+
+user_data/*
+!user_data/.keep
+
