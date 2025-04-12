@@ -3,6 +3,7 @@ streamlit
 openai>=1.0.0
 langchain-openai
 langchain-core
+dotnev
 
 # Data handling
 pandas
