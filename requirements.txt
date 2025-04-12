@@ -10,6 +10,5 @@ xmltodict
 requests
 
 # Utilities
-re
 os
 datetime
