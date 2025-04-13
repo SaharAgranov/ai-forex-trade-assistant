@@ -12,6 +12,7 @@ from forex_data import get_forex_rate
 from datetime import datetime
 from users_data import list_all_users, load_user_data, save_user_data
 from extract_data_with_gpt import extract_trade_with_openai
+from clean_currency_pair import clean_currency_pair
 
 # Session state
 pending_trade = None
@@ -185,7 +186,15 @@ def chatbot_response(user_input, user_id=1, user_data=None):
         if not pending_trade.get('currency_pair'):
             return "⚠️ Missing currency pair. Please specify a valid currency pair (e.g., 'EUR/USD')."
 
-        base, quote = pending_trade['currency_pair'].split('/')
+        # base, quote = pending_trade['currency_pair'].split('/')
+
+        cleaned_pair = clean_currency_pair(pending_trade.get('currency_pair', ''))
+        if not cleaned_pair:
+            return "⚠️ Invalid currency pair format. Please enter something like `USD/EUR`."
+
+        pending_trade['currency_pair'] = cleaned_pair
+        base, quote = cleaned_pair.split('/')
+
         market_price = get_forex_rate(base, quote)
         print(f"[DEBUG] Fallback market price fetched: {market_price}")
 
