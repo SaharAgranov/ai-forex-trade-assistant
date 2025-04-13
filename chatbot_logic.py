@@ -190,6 +190,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
         # base, quote = pending_trade['currency_pair'].split('/')
 
         cleaned_pair = clean_currency_pair(pending_trade.get('currency_pair', ''))
+        print(f"[DEBUG] Cleaned currency pair: {cleaned_pair}")
         if not cleaned_pair:
             return "⚠️ Invalid currency pair format. Please enter something like `USD/EUR`."
 
