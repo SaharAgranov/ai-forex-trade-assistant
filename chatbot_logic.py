@@ -182,6 +182,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
     market_price = None
         # Try to fetch price if it's missing (market order fallback)
     if pending_trade and not pending_trade.get('price'):
+        print("[DEBUG] ----- ",pending_trade)
           # Ensure 'currency_pair' exists
         if not pending_trade.get('currency_pair'):
             return "⚠️ Missing currency pair. Please specify a valid currency pair (e.g., 'EUR/USD')."
