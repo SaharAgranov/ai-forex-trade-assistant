@@ -1,5 +1,5 @@
 import pandas as pd
-import datetime
+from datetime import datetime, timedelta
 import requests
 import os
 import my_config
@@ -24,7 +24,7 @@ def fetch_forex_history(base: str, quote: str):
     df = df.astype(float)
     df.index = pd.to_datetime(df.index)
     df = df.sort_index()
-    df = df[df.index >= (datetime.datetime.now() - datetime.timedelta(days=365))]
+    df = df[df.index >= (datetime.now() - timedelta(days=365))]
     df.reset_index(inplace=True)
     df.rename(columns={"index": "timestamp"}, inplace=True)
     df.to_csv(file_path, index=False)
