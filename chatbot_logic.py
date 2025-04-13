@@ -65,6 +65,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
             parts = [p.upper() for p in parts if p.isalpha()]
             
             if len(parts != 2):
+                pending_trade = None
                 return "⚠️ Invalid currency pair format. Please use 'EUR/USD'"
 
             currency_pair = f"{parts[0]}/{parts[1]}"
@@ -133,7 +134,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
             return (f"✅ Trade confirmed: {action.upper()} {amount} {currency_pair} at {price} "
                     f"(SL: {sl}, TP: {tp}).\n\n💡 AI Feedback:\n{analysis}")
         
-        else:
+        elif user_input in ["no", "cancel", "n", "stop"]:
             confirmation_waiting = False
             pending_trade = None
             return "❌ Trade cancelled, enter a new trade or exit."
