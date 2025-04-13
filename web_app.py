@@ -75,9 +75,9 @@ else:
     if not st.session_state.chat_log:
         welcome_msg = (
             "👋 Welcome to the AI Forex Trade Assistant!\n\n"
-            "- Type something like **buy 1000 EUR/USD** to open a trade.\n"
+            "- Type something like **buy 1000 EUR/USD at price of 0.8** to open a trade.\n"
             "- You can leave the price blank to buy/sell at the market rate.\n"
-            "- You’ll be asked to choose SL/TP methods or enter them manually.\n\n"
+            "- You can set SL/TP or leave it for defualt set.\n\n"
             "📌 Type your first message below to begin!"
         )
         st.session_state.chat_log.append(("AI", welcome_msg))
