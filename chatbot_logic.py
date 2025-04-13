@@ -193,6 +193,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
         cleaned_pair = clean_currency_pair(pending_trade.get('currency_pair', ''))
         print(f"[DEBUG] Cleaned currency pair: {cleaned_pair}")
         if not cleaned_pair:
+            pending_trade = None  # Reset pending trade
             return "⚠️ Invalid currency pair format. Please enter something like `USD/EUR` (Start new trade)."
 
         pending_trade['currency_pair'] = cleaned_pair
