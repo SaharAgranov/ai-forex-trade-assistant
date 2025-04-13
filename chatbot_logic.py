@@ -56,17 +56,21 @@ def chatbot_response(user_input, user_id=1, user_data=None):
             currency_pair = pending_trade.get('currency_pair', '').strip()
 
             # Validate and auto-correct currency pair format
-            if ' ' in currency_pair and '/' not in currency_pair:
+            if '/' in currency_pair:
+                parts = currency_pair.split('/')
+            else:
                 parts = currency_pair.split()
-                if len(parts) == 2:
-                    currency_pair = f"{parts[0].upper()}/{parts[1].upper()}"
-                    pending_trade['currency_pair'] = currency_pair
 
-            if '/' not in currency_pair:
-                return "⚠️ Invalid currency pair format. Please use the format 'USD/ILS'."
-
-            base, quote = currency_pair.split('/')
+            parts = [p.upper() for p in parts if p.isalpha()]
             
+            if len(parts != 2):
+                return "⚠️ Invalid currency pair format. Please use 'EUR/USD'"
+
+            currency_pair = f"{parts[0]}/{parts[1]}"
+            pending_trade['currency_pair'] = currency_pair
+
+            base, quote = parts
+
             # Fetch market price if not given (market order)
             if not price:
                 print(f"[DEBUG] Fetching market price for {currency_pair}...")
@@ -86,7 +90,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
             tp = pending_trade.get('take_profit')
 
             # SL/TP
-            sl_pct, tp_pct = 0.015, 0.03
+            sl_pct, tp_pct = 0.01, 0.03
             if action == 'buy':
                 sl = sl or round(price * (1 - sl_pct), 5)
                 tp = tp or round(price * (1 + tp_pct), 5)
