@@ -34,8 +34,12 @@ user_id = st.sidebar.selectbox("Select User ID", user_list)
 
 st.sidebar.markdown("### 📁 Upload User File (.json only)")
 
+# if "loaded_user_ids" not in st.session_state:
+#     st.session_state.loaded_user_ids = set(user_list)
+
 if "loaded_user_ids" not in st.session_state:
-    st.session_state.loaded_user_ids = set(user_list)
+    st.session_state.loaded_user_ids = set(int(uid) for uid in user_list if str(uid).isdigit())
+
 
 uploaded_file = st.sidebar.file_uploader("Choose and upload user file", type=["json"], key="user_upload")
 

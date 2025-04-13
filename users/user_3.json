@@ -1,1 +1,15 @@
-user_id = 3
+{
+  "user_id": 3,
+  "trades": [
+    {
+      "currency_pair": "EUR/USD",
+      "action": "buy",
+      "amount": 1000,
+      "price": 1.0850,
+      "stop_loss": 1.0700,
+      "take_profit": 1.1000,
+      "risk_rate": 0.02,
+      "timestamp": "2025-04-13 12:00:00"
+    }
+  ]
+}
