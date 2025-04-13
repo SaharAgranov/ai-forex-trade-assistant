@@ -64,7 +64,7 @@ def chatbot_response(user_input, user_id=1, user_data=None):
 
             parts = [p.upper() for p in parts if p.isalpha()]
             
-            if len(parts != 2):
+            if len(parts) != 2:
                 pending_trade = None
                 return "⚠️ Invalid currency pair format. Please use 'EUR/USD'"
 
