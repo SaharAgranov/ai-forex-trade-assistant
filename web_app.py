@@ -77,7 +77,9 @@ else:
             "👋 Welcome to the AI Forex Trade Assistant!\n\n"
             "- Type something like **buy 1000 EUR/USD at price of 0.8** to open a trade.\n"
             "- You can leave the price blank to buy/sell at the market rate.\n"
-            "- You can set SL/TP or leave it for defualt set.\n\n"
+            "- You can set SL/TP or leave it for defualt set.\n"
+            "- **Trade History**: Your last 10 trades will be displayed below.\n"
+            "- **You can reset the chat by reloading the page or load the user again.**\n\n"
             "📌 Type your first message below to begin!"
         )
         st.session_state.chat_log.append(("AI", welcome_msg))
