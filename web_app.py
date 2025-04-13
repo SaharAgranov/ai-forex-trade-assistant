@@ -13,10 +13,7 @@ if 'chat_log' not in st.session_state:
     st.session_state.chat_log = []
 if 'welcome_shown' not in st.session_state:
     st.session_state.welcome_shown = False
-
-if "last_uploaded_user_id" not in st.session_state:
-    st.session_state.last_uploaded_user_id = None
-
+    
 
 
 
@@ -39,8 +36,12 @@ user_id = st.sidebar.selectbox("Select User ID", user_list)
 
 st.sidebar.markdown("### 📁 Upload User File (.json only)")
 
+# if "loaded_user_ids" not in st.session_state:
+#     st.session_state.loaded_user_ids = set(user_list)
+
 if "loaded_user_ids" not in st.session_state:
     st.session_state.loaded_user_ids = set(int(uid) for uid in user_list if str(uid).isdigit())
+
 
 uploaded_file = st.sidebar.file_uploader("Choose and upload user file", type=["json"], key="user_upload")
 
@@ -53,25 +54,23 @@ if uploaded_file is not None:
         else:
             user_id = int(user_data["user_id"])
 
-            # ✅ Skip warning if it's the same file just uploaded
-            if user_id in st.session_state.loaded_user_ids and user_id != st.session_state.last_uploaded_user_id:
+            if user_id in st.session_state.loaded_user_ids:
                 st.sidebar.warning(f"⚠️ User ID `{user_id}` already exists.")
-            elif user_id != st.session_state.last_uploaded_user_id:
-                # Save user file
+            else:
+                # Save user file to disk
                 with open(os.path.join(USER_FOLDER, f"user_{user_id}.json"), "w") as f:
                     json.dump(user_data, f, indent=2)
 
-                st.session_state.loaded_user_ids.add(user_id)
+                # Update state
                 st.session_state.user_id = user_id
                 st.session_state.chat_log = []
-                st.session_state.last_uploaded_user_id = user_id  # ✅ Mark as just uploaded
+                st.session_state.loaded_user_ids.add(user_id)
 
                 st.success(f"✅ Uploaded and loaded user ID `{user_id}`.")
                 st.rerun()
 
     except Exception as e:
         st.sidebar.error(f"❌ Could not read file: {e}")
-
 
 
 
