@@ -32,17 +32,12 @@ user_list = list_all_users()
 user_id = st.sidebar.selectbox("Select User ID", user_list)
 
 
-
-
 st.sidebar.markdown("### 📁 Upload User File (.json only)")
 
 if "loaded_user_ids" not in st.session_state:
     st.session_state.loaded_user_ids = set(user_list)
 
-if "temp_uploaded_user" not in st.session_state:
-    st.session_state.temp_uploaded_user = None
-
-uploaded_file = st.sidebar.file_uploader("Choose user file", type=["json"], key="user_upload")
+uploaded_file = st.sidebar.file_uploader("Choose and upload user file", type=["json"], key="user_upload")
 
 if uploaded_file is not None:
     try:
@@ -50,35 +45,26 @@ if uploaded_file is not None:
 
         if not isinstance(user_data, dict) or "user_id" not in user_data:
             st.sidebar.error("❌ Invalid JSON: must contain a top-level 'user_id' field.")
-            st.session_state.temp_uploaded_user = None
         else:
-            st.session_state.temp_uploaded_user = user_data
-            st.sidebar.success("✅ File loaded. Click 'Upload User' to confirm.")
+            user_id = int(user_data["user_id"])
+
+            if user_id in st.session_state.loaded_user_ids:
+                st.sidebar.warning(f"⚠️ User ID `{user_id}` already exists.")
+            else:
+                # Save user file to disk
+                with open(os.path.join(USER_FOLDER, f"user_{user_id}.json"), "w") as f:
+                    json.dump(user_data, f, indent=2)
+
+                # Update state
+                st.session_state.user_id = user_id
+                st.session_state.chat_log = []
+                st.session_state.loaded_user_ids.add(user_id)
+
+                st.success(f"✅ Uploaded and loaded user ID `{user_id}`.")
+                st.rerun()
+
     except Exception as e:
-        st.sidebar.error(f"❌ Could not parse file: {e}")
-        st.session_state.temp_uploaded_user = None
-
-if st.sidebar.button("📥 Upload User"):
-    user_data = st.session_state.get("temp_uploaded_user")
-
-    if not user_data:
-        st.sidebar.error("❌ No valid user file loaded.")
-    else:
-        user_id = int(user_data["user_id"])
-        if user_id in st.session_state.loaded_user_ids:
-            st.sidebar.warning(f"⚠️ User ID `{user_id}` already exists.")
-        else:
-            # Save to disk
-            with open(os.path.join(USER_FOLDER, f"user_{user_id}.json"), "w") as f:
-                json.dump(user_data, f, indent=2)
-
-            # Update session
-            st.session_state.user_id = user_id
-            st.session_state.loaded_user_ids.add(user_id)
-            st.session_state.chat_log = []
-            st.success(f"✅ User ID `{user_id}` uploaded and loaded.")
-            st.rerun()
-
+        st.sidebar.error(f"❌ Could not read file: {e}")
 
 
 
